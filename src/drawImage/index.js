@@ -1,60 +1,20 @@
 import fs from 'fs'
 import { createCanvas } from 'canvas'
-import * as dateFns from 'date-fns'
-import { scaleLinear, scaleTime } from 'd3-scale'
 
 import getUSDRates from '../getUSDRates'
-
-const getYScale = (canvasHeight, yBounds) => {
-  return scaleLinear()
-    .domain([yBounds.min, yBounds.max])
-    .range([canvasHeight, 0])
-}
-
-const getXScale = (canvasWidth, xBounds) => {
-  if (!canvasWidth) {
-    return null
-  }
-
-  return scaleTime()
-    .domain([xBounds.min, xBounds.max])
-    .range([0, canvasWidth])
-}
+import getScales from './getScales'
+import { drawRatesChart, drawAvgRatesChart } from './drawRatesChart'
 
 const drawImage = async () => {
   const rates = await getUSDRates()
   const canvasWidth = 1000
   const canvasHeight = 700
-  console.log('%c11111', 'background:#00FF00', 'rates=', rates);
-  const dates = rates.map(({ date }) => date)
-  const xScale = getXScale(
-    canvasWidth,
-    {
-      min: dateFns.min(dates),
-      max: dateFns.max(dates),
-    },
-  )
 
-  const values = rates.map(({ value }) => value)
-  const yScale = getYScale(
-    canvasHeight,
-    {
-      min: Math.min(...values) - 1,
-      max: Math.max(...values) + 1,
-    },
-  )
-
+  const { xScale, yScale } = getScales({ canvasWidth, canvasHeight, rates })
   const canvas = createCanvas(canvasWidth, canvasHeight)
-  const ctx = canvas.getContext('2d')
 
-  ctx.strokeStyle = 'rgba(0,0,0,0.5)'
-  ctx.lineWidth = 3
-  ctx.beginPath()
-  ctx.moveTo(xScale(rates[0].date), yScale(rates[0].value))
-  for (let i = 1; i < rates.length; i++) {
-    ctx.lineTo(xScale(rates[i].date), yScale(rates[i].value))
-  }
-  ctx.stroke()
+  drawAvgRatesChart({ canvas, rates, xScale, yScale })
+  drawRatesChart({ canvas, rates, xScale, yScale })
 
   // // Write "Awesome!"
   // ctx.font = '30px Impact'
