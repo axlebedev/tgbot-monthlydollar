@@ -1,6 +1,6 @@
 import * as dateFns from 'date-fns'
 
-import getRequest from './getRequest'
+import getRequest from './utils/getRequest'
 
 const format = 'dd/MM/yyyy'
 const url = 'http://www.cbr.ru/scripts/XML_dynamic.asp'
