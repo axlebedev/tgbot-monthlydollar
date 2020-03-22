@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import getMonthAvg from './src/getMonthAvg'
+import drawImage from './src/drawImage'
 
 const Telegraf = require('telegraf')
 
@@ -26,9 +27,10 @@ bot.on('text', async (ctx) => {
   ctx.reply(reply)
 })
 
-bot.hears('hi', (ctx) => {
+bot.hears('hi', async (ctx) => {
   console.log('hi ctx=', ctx)
-  ctx.reply('Hey there')
+  const image = await drawImage()
+  ctx.replyWithPhoto(image)
 })
 
 console.log('bot.launch')
