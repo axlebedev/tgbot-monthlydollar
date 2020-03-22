@@ -7,14 +7,13 @@ import {
   isEqual,
 } from 'date-fns'
 
-const mainColor = 'rgb(63, 63, 63)'
-const altColor = 'rgb(128, 128, 128)'
-
-// const mainColor = 'rgb(0, 0, 0)'
-// const altColor = 'rgb(255, 0, 0)'
+import {
+  mainAxisColor,
+  altAxisColor,
+} from './colors'
 
 const drawBorder = ({ ctx, xScale, yScale }) => {
-  ctx.strokeStyle = mainColor
+  ctx.strokeStyle = mainAxisColor
   ctx.lineWidth = 1
   ctx.beginPath()
   ctx.moveTo(xScale.range()[0], yScale.range()[1])
@@ -39,8 +38,8 @@ const drawXAxis = ({ ctx, rates, xScale, yScale }) => {
   ctx.font = `${fontSize}px Impact`
   days.forEach((day) => {
     const color = find(dates, (date) => isEqual(day, date)) !== undefined
-      ? mainColor
-      : altColor
+      ? mainAxisColor
+      : altAxisColor
     ctx.fillStyle = color
     ctx.fillText(format(day, 'dd'), xScale(day), bottom)
   })
@@ -67,8 +66,8 @@ const drawYAxis = ({ ctx, xScale, yScale }) => {
   ticks.forEach((tick) => {
     const y = yScale(tick)
     const color = tick % 5 === 0
-      ? mainColor
-      : altColor
+      ? mainAxisColor
+      : altAxisColor
     ctx.fillStyle = color
     ctx.strokeStyle = color
     ctx.textAlign = 'right'
@@ -76,7 +75,7 @@ const drawYAxis = ({ ctx, xScale, yScale }) => {
     ctx.textAlign = 'left'
     ctx.fillText(` ${tick}`, right, y)
 
-    ctx.setLineDash(color === mainColor ? [] : [5, 15])
+    ctx.setLineDash(color === mainAxisColor ? [] : [5, 15])
     ctx.beginPath()
     ctx.moveTo(left, y)
     ctx.lineTo(right, y)

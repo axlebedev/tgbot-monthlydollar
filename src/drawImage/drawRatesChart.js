@@ -1,9 +1,13 @@
 import sum from 'lodash/sum'
 
 import { drawCircle } from './drawUtils'
+import {
+  ratesChartColor,
+  avgChartColor,
+} from './colors'
 
 export const drawRatesChart = async ({ ctx, rates, xScale, yScale }) => {
-  ctx.strokeStyle = 'rgb(22, 14, 115)'
+  ctx.strokeStyle = ratesChartColor
   ctx.lineWidth = 3
   ctx.setLineDash([])
   ctx.beginPath()
@@ -31,7 +35,7 @@ const getAvgRates = (rates) => {
 export const drawAvgRatesChart = async ({ ctx, rates, xScale, yScale }) => {
   const avgRates = getAvgRates(rates)
 
-  ctx.strokeStyle = 'rgb(62, 129, 189)'
+  ctx.strokeStyle = avgChartColor
   ctx.lineWidth = 3
   ctx.setLineDash([])
   ctx.beginPath()

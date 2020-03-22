@@ -5,6 +5,7 @@ import getUSDRates from '../getUSDRates'
 import getScales from './getScales'
 import { drawRatesChart, drawAvgRatesChart } from './drawRatesChart'
 import { drawAxis } from './drawAxis'
+import { drawLegend } from './drawLegend'
 
 const drawImage = async () => {
   const rates = await getUSDRates()
@@ -16,6 +17,7 @@ const drawImage = async () => {
   const ctx = canvas.getContext('2d')
 
   drawAxis({ ctx, rates, xScale, yScale })
+  drawLegend({ ctx, xScale, yScale })
   drawAvgRatesChart({ ctx, rates, xScale, yScale })
   drawRatesChart({ ctx, rates, xScale, yScale })
 
