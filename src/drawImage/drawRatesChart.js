@@ -1,28 +1,17 @@
 import sum from 'lodash/sum'
 
+import { drawCircle } from './drawUtils'
+
 export const drawRatesChart = async ({ canvas, rates, xScale, yScale }) => {
   const ctx = canvas.getContext('2d')
 
   ctx.strokeStyle = 'rgb(22, 14, 115)'
   ctx.lineWidth = 3
   ctx.beginPath()
-  ctx.moveTo(xScale(rates[0].date), yScale(rates[0].value))
-  ctx.arc(
-    xScale(rates[0].date),
-    yScale(rates[0].value),
-    3,
-    0,
-    Math.PI * 2,
-  )
+  drawCircle(ctx, xScale(rates[0].date), yScale(rates[0].value))
   for (let i = 1; i < rates.length; i++) {
     ctx.lineTo(xScale(rates[i].date), yScale(rates[i].value))
-    ctx.arc(
-      xScale(rates[i].date),
-      yScale(rates[i].value),
-      3,
-      0,
-      Math.PI * 2,
-    )
+    drawCircle(ctx, xScale(rates[i].date), yScale(rates[i].value))
   }
   ctx.stroke()
 }
@@ -47,23 +36,10 @@ export const drawAvgRatesChart = async ({ canvas, rates, xScale, yScale }) => {
   ctx.strokeStyle = 'rgb(62, 129, 189)'
   ctx.lineWidth = 3
   ctx.beginPath()
-  ctx.moveTo(xScale(avgRates[0].date), yScale(avgRates[0].value))
-  ctx.arc(
-    xScale(avgRates[0].date),
-    yScale(avgRates[0].value),
-    3,
-    0,
-    Math.PI * 2,
-  )
+  drawCircle(ctx, xScale(avgRates[0].date), yScale(avgRates[0].value))
   for (let i = 1; i < avgRates.length; i++) {
     ctx.lineTo(xScale(avgRates[i].date), yScale(avgRates[i].value))
-    ctx.arc(
-      xScale(avgRates[i].date),
-      yScale(avgRates[i].value),
-      3,
-      0,
-      Math.PI * 2,
-    )
+    drawCircle(ctx, xScale(avgRates[i].date), yScale(avgRates[i].value))
   }
   ctx.stroke()
 }
