@@ -12,25 +12,24 @@ bot.start((ctx) => {
 })
 
 bot.help((ctx) => {
-  console.log('help ctx=', ctx)
+  console.log('help ctx=', ctx.update.message)
   ctx.reply('Send me a sticker')
 })
 
 bot.on('sticker', (ctx) => {
-  console.log('sticker ctx=', ctx)
+  console.log('sticker ctx=', ctx.update.message)
   ctx.reply('👍')
 })
 
 bot.on('text', async (ctx) => {
-  console.log('text ctx=', ctx)
+  console.log('text ctx=', ctx.update.message)
+  if (ctx.update.message.text === 'hi') {
+    const image = await drawImage()
+    ctx.replyWithPhoto({ source: Buffer.from(image, 'base64') })
+    return
+  }
   const reply = await getMonthAvg()
   ctx.reply(reply)
-})
-
-bot.hears('hi', async (ctx) => {
-  console.log('hi ctx=', ctx)
-  const image = await drawImage()
-  ctx.replyWithPhoto(image)
 })
 
 console.log('bot.launch')

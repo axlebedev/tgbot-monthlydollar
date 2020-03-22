@@ -24,7 +24,7 @@ const getXScale = (canvasWidth, xBounds) => {
 const drawImage = async () => {
   const rates = await getUSDRates()
   const canvasWidth = 1000
-  const canvasHeight = 1000
+  const canvasHeight = 700
   console.log('%c11111', 'background:#00FF00', 'rates=', rates);
   const dates = rates.map(({ date }) => date)
   const xScale = getXScale(
@@ -63,6 +63,7 @@ const drawImage = async () => {
 
   const buf = canvas.toBuffer()
   fs.writeFileSync('test.png', buf)
+  return buf.toString('base64')
 }
 
-drawImage()
+export default drawImage
