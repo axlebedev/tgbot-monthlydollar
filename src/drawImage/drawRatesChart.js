@@ -2,11 +2,10 @@ import sum from 'lodash/sum'
 
 import { drawCircle } from './drawUtils'
 
-export const drawRatesChart = async ({ canvas, rates, xScale, yScale }) => {
-  const ctx = canvas.getContext('2d')
-
+export const drawRatesChart = async ({ ctx, rates, xScale, yScale }) => {
   ctx.strokeStyle = 'rgb(22, 14, 115)'
   ctx.lineWidth = 3
+  ctx.setLineDash([])
   ctx.beginPath()
   drawCircle(ctx, xScale(rates[0].date), yScale(rates[0].value))
   for (let i = 1; i < rates.length; i++) {
@@ -29,12 +28,12 @@ const getAvgRates = (rates) => {
   })
 }
 
-export const drawAvgRatesChart = async ({ canvas, rates, xScale, yScale }) => {
-  const ctx = canvas.getContext('2d')
+export const drawAvgRatesChart = async ({ ctx, rates, xScale, yScale }) => {
   const avgRates = getAvgRates(rates)
 
   ctx.strokeStyle = 'rgb(62, 129, 189)'
   ctx.lineWidth = 3
+  ctx.setLineDash([])
   ctx.beginPath()
   drawCircle(ctx, xScale(avgRates[0].date), yScale(avgRates[0].value))
   for (let i = 1; i < avgRates.length; i++) {
