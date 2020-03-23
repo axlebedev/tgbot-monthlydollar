@@ -41,7 +41,7 @@ bot.on('text', async (ctx) => {
   }
 
   ctx.replyWithPhoto({ source: todaysCache.base64 })
-  ctx.reply(todaysCache.rate)
+  ctx.reply(`${todaysCache.rate} - средний курс доллара с 1 числа по сегодня по курсу ЦБ РФ`)
 })
 
 console.log('bot.launch')
