@@ -1,4 +1,5 @@
 import find from 'lodash/find'
+import capitalize from 'lodash/capitalize'
 import { timeDay } from 'd3-time'
 import {
   format,
@@ -6,11 +7,15 @@ import {
   addDays,
   isEqual,
 } from 'date-fns'
+import { ru } from 'date-fns/locale'
 
 import {
   mainAxisColor,
   altAxisColor,
+  monthAxisColor,
 } from './colors'
+
+const fontSize = 15
 
 const drawBorder = ({ ctx, xScale, yScale }) => {
   ctx.strokeStyle = mainAxisColor
@@ -33,7 +38,6 @@ const drawXAxis = ({ ctx, rates, xScale, yScale }) => {
   const days = getVisibleDays(xScale).map(startOfDay)
 
   ctx.textAlign = 'center'
-  const fontSize = 15
   const bottom = yScale.range()[0] + fontSize
   ctx.font = `${fontSize}px Impact`
   days.forEach((day) => {
@@ -43,6 +47,21 @@ const drawXAxis = ({ ctx, rates, xScale, yScale }) => {
     ctx.fillStyle = color
     ctx.fillText(format(day, 'dd'), xScale(day), bottom)
   })
+}
+
+const drawXAxisMonth = ({ ctx, xScale, yScale }) => {
+  ctx.textAlign = 'center'
+  const bottom = yScale.range()[0] + fontSize
+  const localFontSize = fontSize * 2
+  ctx.font = `bold ${localFontSize}px Impact`
+  ctx.fillStyle = monthAxisColor
+  const [left, right] = xScale.range()
+  const center = (left + right) / 2
+  ctx.fillText(
+    capitalize(format(new Date(), 'LLLL yyyy', { locale: ru })),
+    center,
+    bottom + localFontSize,
+  )
 }
 
 const getYAxisTicks = (yScale) => {
@@ -59,7 +78,6 @@ const getYAxisTicks = (yScale) => {
 const drawYAxis = ({ ctx, xScale, yScale }) => {
   const ticks = getYAxisTicks(yScale)
 
-  const fontSize = 15
   const [left, right] = xScale.range()
   ctx.font = `${fontSize}px Impact`
   ctx.lineWidth = 0.5
@@ -86,5 +104,6 @@ const drawYAxis = ({ ctx, xScale, yScale }) => {
 export const drawAxis = async ({ ctx, rates, xScale, yScale }) => {
   drawBorder({ ctx, xScale, yScale })
   drawXAxis({ ctx, rates, xScale, yScale })
+  drawXAxisMonth({ ctx, xScale, yScale })
   drawYAxis({ ctx, rates, xScale, yScale })
 }
