@@ -1,4 +1,5 @@
 import 'dotenv/config'
+import { isEqual, startOfToday } from 'date-fns'
 import getMonthAvg from './src/getMonthAvg'
 import drawImage from './src/drawImage'
 
@@ -21,15 +22,26 @@ bot.on('sticker', (ctx) => {
   ctx.reply('👍')
 })
 
+let todaysCache = {
+  date: null,
+  base64: null,
+  rate: null,
+}
+
 bot.on('text', async (ctx) => {
   console.log('text ctx=', ctx.update.message)
-  if (ctx.update.message.text === 'hi') {
+  if (todaysCache.base64 === null || !isEqual(todaysCache.date, startOfToday())) {
     const image = await drawImage()
-    ctx.replyWithPhoto({ source: Buffer.from(image, 'base64') })
-    return
+    const rate = await getMonthAvg()
+    todaysCache = {
+      date: startOfToday(),
+      base64: Buffer.from(image, 'base64'),
+      rate,
+    }
   }
-  const reply = await getMonthAvg()
-  ctx.reply(reply)
+
+  ctx.replyWithPhoto({ source: todaysCache.base64 })
+  ctx.reply(todaysCache.rate)
 })
 
 console.log('bot.launch')
