@@ -1,5 +1,6 @@
 import 'dotenv/config'
 import { isEqual, startOfToday } from 'date-fns'
+import maxBy from 'lodash/maxBy'
 import getMonthAvg from './src/getMonthAvg'
 import drawImage from './src/drawImage'
 
@@ -25,6 +26,7 @@ bot.on('sticker', (ctx) => {
 let todaysCache = {
   date: null,
   base64: null,
+  fileId: null,
   rate: null,
 }
 
@@ -37,10 +39,12 @@ bot.on('text', async (ctx) => {
       date: startOfToday(),
       base64: Buffer.from(image, 'base64'),
       rate,
+      fileId: null,
     }
   }
 
-  ctx.replyWithPhoto({ source: todaysCache.base64 })
+  const response = await ctx.replyWithPhoto(todaysCache.fileId || { source: todaysCache.base64 })
+  todaysCache.fileId = maxBy(response.photo).file_id
   ctx.reply(`${todaysCache.rate} - средний курс доллара с 1 числа по сегодня по курсу ЦБ РФ`)
 })
 
