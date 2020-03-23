@@ -9,17 +9,18 @@ import {
 } from './colors'
 
 const fontSize = 15
+const lineWidth = 3
 
-export const drawRatesChart = async ({ ctx, rates, xScale, yScale }) => {
-  ctx.strokeStyle = ratesChartColor
-  ctx.fillStyle = ratesChartColor
-  ctx.lineWidth = 3
+const drawChart = ({ ctx, array, xScale, yScale, color }) => {
+  ctx.strokeStyle = color
+  ctx.fillStyle = color
+  ctx.lineWidth = lineWidth
   ctx.setLineDash([])
   ctx.beginPath()
-  drawCircle(ctx, xScale(rates[0].date), yScale(rates[0].value))
-  for (let i = 1; i < rates.length; i++) {
-    ctx.lineTo(xScale(rates[i].date), yScale(rates[i].value))
-    drawCircle(ctx, xScale(rates[i].date), yScale(rates[i].value))
+  drawCircle(ctx, xScale(array[0].date), yScale(array[0].value))
+  for (let i = 1; i < array.length; i++) {
+    ctx.lineTo(xScale(array[i].date), yScale(array[i].value))
+    drawCircle(ctx, xScale(array[i].date), yScale(array[i].value))
   }
   ctx.stroke()
 
@@ -27,14 +28,24 @@ export const drawRatesChart = async ({ ctx, rates, xScale, yScale }) => {
   ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
   ctx.fillRect(
     right + fontSize / 3,
-    yScale(last(rates).value) - fontSize,
+    yScale(last(array).value) - fontSize,
     fontSize * 3,
     fontSize,
   )
-  ctx.fillStyle = ratesChartColor
+  ctx.fillStyle = color
   ctx.textAlign = 'left'
   ctx.font = `bold ${fontSize}px Impact`
-  ctx.fillText(` ${round(last(rates).value, 2)}`, right, yScale(last(rates).value))
+  ctx.fillText(` ${round(last(array).value, 2)}`, right, yScale(last(array).value))
+}
+
+export const drawRatesChart = ({ ctx, rates, xScale, yScale }) => {
+  drawChart({
+    ctx,
+    array: rates,
+    xScale,
+    yScale,
+    color: ratesChartColor,
+  })
 }
 
 const getAvgRates = (rates) => {
@@ -50,31 +61,12 @@ const getAvgRates = (rates) => {
   })
 }
 
-export const drawAvgRatesChart = async ({ ctx, rates, xScale, yScale }) => {
-  const avgRates = getAvgRates(rates)
-
-  ctx.fillStyle = avgChartColor
-  ctx.strokeStyle = avgChartColor
-  ctx.lineWidth = 3
-  ctx.setLineDash([])
-  ctx.beginPath()
-  drawCircle(ctx, xScale(avgRates[0].date), yScale(avgRates[0].value))
-  for (let i = 1; i < avgRates.length; i++) {
-    ctx.lineTo(xScale(avgRates[i].date), yScale(avgRates[i].value))
-    drawCircle(ctx, xScale(avgRates[i].date), yScale(avgRates[i].value))
-  }
-  ctx.stroke()
-
-  const [, right] = xScale.range()
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.5)'
-  ctx.fillRect(
-    right + fontSize / 3,
-    yScale(last(avgRates).value) - fontSize,
-    fontSize * 3,
-    fontSize,
-  )
-  ctx.fillStyle = avgChartColor
-  ctx.textAlign = 'left'
-  ctx.font = `bold ${fontSize}px Impact`
-  ctx.fillText(` ${round(last(avgRates).value, 2)}`, right, yScale(last(avgRates).value))
+export const drawAvgRatesChart = ({ ctx, rates, xScale, yScale }) => {
+  drawChart({
+    ctx,
+    array: getAvgRates(rates),
+    xScale,
+    yScale,
+    color: avgChartColor,
+  })
 }
