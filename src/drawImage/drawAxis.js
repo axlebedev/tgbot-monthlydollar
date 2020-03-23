@@ -62,7 +62,7 @@ const drawYAxis = ({ ctx, xScale, yScale }) => {
   const fontSize = 15
   const [left, right] = xScale.range()
   ctx.font = `${fontSize}px Impact`
-  ctx.lineWidth = 1
+  ctx.lineWidth = 0.5
   ticks.forEach((tick) => {
     const y = yScale(tick)
     const color = tick % 5 === 0
@@ -75,7 +75,7 @@ const drawYAxis = ({ ctx, xScale, yScale }) => {
     ctx.textAlign = 'left'
     ctx.fillText(` ${tick}`, right, y)
 
-    ctx.setLineDash(color === mainAxisColor ? [] : [5, 15])
+    ctx.setLineDash(color === mainAxisColor ? [1, 1] : [1, 3])
     ctx.beginPath()
     ctx.moveTo(left, y)
     ctx.lineTo(right, y)
