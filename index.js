@@ -1,3 +1,4 @@
+import fs from 'fs'
 import 'dotenv/config'
 import { isEqual, startOfToday } from 'date-fns'
 import maxBy from 'lodash/maxBy'
@@ -31,7 +32,6 @@ let todaysCache = {
 }
 
 bot.on('text', async (ctx) => {
-  console.log('text ctx=', ctx.update.message)
   if (todaysCache.base64 === null || !isEqual(todaysCache.date, startOfToday())) {
     const image = await drawImage()
     const rate = await getMonthAvg()
@@ -46,6 +46,16 @@ bot.on('text', async (ctx) => {
   const response = await ctx.replyWithPhoto(todaysCache.fileId || { source: todaysCache.base64 })
   todaysCache.fileId = maxBy(response.photo).file_id
   ctx.reply(`${todaysCache.rate} - средний курс доллара с 1 числа по сегодня по курсу ЦБ РФ`)
+  fs.appendFile(
+    'log.txt',
+    '\n' + JSON.stringify({ // eslint-disable-line prefer-template
+      name: `${ctx.from.first_name} ${ctx.from.last_name}`,
+      username: ctx.from.username,
+      date: ctx.date,
+      text: ctx.text,
+    }),
+    (err) => console.log('append log error: ', err),
+  )
 })
 
 console.log('bot.launch')
