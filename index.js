@@ -13,7 +13,7 @@ const logToFile = (text) => {
   fs.appendFile(
     'log.txt',
     `\n${text}`,
-    (err) => console.log('append log error: ', err),
+    (err) => err && console.log('append log error: ', err),
   )
 }
 
@@ -57,18 +57,12 @@ bot.on('text', async (ctx) => {
   const response = await ctx.replyWithPhoto(todaysCache.fileId || { source: todaysCache.base64 })
   todaysCache.fileId = maxBy(response.photo).file_id
   ctx.reply(`${todaysCache.rate} - средний курс доллара с 1 числа по сегодня по курсу ЦБ РФ`)
-  console.log(JSON.stringify({ // eslint-disable-line prefer-template
-    name: `${ctx.from.first_name} ${ctx.from.last_name}`,
-    username: ctx.from.username,
-    date: ctx.date,
-    text: ctx.text,
-  }))
   logToFile(
     JSON.stringify({ // eslint-disable-line prefer-template
       name: `${ctx.from.first_name} ${ctx.from.last_name}`,
       username: ctx.from.username,
-      date: ctx.date,
-      text: ctx.text,
+      date: new Date(ctx.update.message.date * 1000),
+      text: ctx.update.message.text,
     }),
   )
 })
