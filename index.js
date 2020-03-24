@@ -10,19 +10,18 @@ const Telegraf = require('telegraf')
 const bot = new Telegraf(process.env.TELEGRAM_TOKEN)
 
 bot.start((ctx) => {
-  console.log('start ctx=', ctx)
   ctx.reply('Welcome!')
 })
 
-bot.help((ctx) => {
-  console.log('help ctx=', ctx.update.message)
-  ctx.reply('Send me a sticker')
-})
-
-bot.on('sticker', (ctx) => {
-  console.log('sticker ctx=', ctx.update.message)
-  ctx.reply('👍')
-})
+// bot.help((ctx) => {
+//   console.log('help ctx=', ctx.update.message)
+//   ctx.reply('Send me a sticker')
+// })
+//
+// bot.on('sticker', (ctx) => {
+//   console.log('sticker ctx=', ctx.update.message)
+//   ctx.reply('👍')
+// })
 
 let todaysCache = {
   date: null,
