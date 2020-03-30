@@ -45,6 +45,11 @@ bot.on('text', async (ctx) => {
     console.log('draw new file', { isBase64, isEqualDate })
     logToFile(`draw new file ${JSON.stringify({ isBase64, isEqualDate })}`)
     const image = await drawImage()
+    if (image === null) {
+      ctx.reply('За этот месяц еще недостаточно данных')
+      return
+    }
+
     const rate = await getMonthAvg()
     todaysCache = {
       date: startOfToday(),

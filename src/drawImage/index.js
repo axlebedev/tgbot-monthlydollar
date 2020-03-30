@@ -9,6 +9,10 @@ import { drawLegend } from './drawLegend'
 
 const drawImage = async () => {
   const rates = await getUSDRates()
+  if (!rates) {
+    return null
+  }
+
   const canvasWidth = 1000
   const canvasHeight = 700
 

@@ -23,6 +23,10 @@ const getUSDRates = async () => {
   }
 
   const values = response.ValCurs.Record
+  if (!values || !values.length) {
+    return null
+  }
+
   return values.map((value) => {
     return {
       date: dateFns.parse(value.$.Date, outputDateFormat, new Date()),
